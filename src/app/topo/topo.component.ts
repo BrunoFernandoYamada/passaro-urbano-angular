@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { OfertaService } from '../oferta.service';
 import { Oferta } from '../shared/oferta.model';
+import 'rxjs/add/operator/switchMap'
+import 'rxjs/add/operator/debounceTime';
 
 
 @Component({
@@ -13,20 +15,24 @@ import { Oferta } from '../shared/oferta.model';
 export class TopoComponent implements OnInit {
 
   public ofertas? : Observable<Oferta[]>
+  private subjectPesquisa : Subject<string> = new Subject<string>();
 
   constructor(private ofertaService : OfertaService) { }
 
   ngOnInit(): void {
-    
+    this.ofertas  = this.subjectPesquisa //retorno Oferta[]
+      .debounceTime(1000) // executa a ação do switchMap após 1 segundo
+      .switchMap((termo : string) => {
+        console.log('requisição http para api: ')
+          return this.ofertaService.pesquisaOfertas(termo)
+      })
+
+      this.ofertas.subscribe((ofertas: Oferta[]) => console.log(ofertas))
   }
 
   pesquisa(termodaBusca: string): void {
-    this.ofertas = this.ofertaService.pesquisaOfertas(termodaBusca)
-
-    this.ofertas.subscribe(
-      (data: Oferta[]) => console.log(data),
-      (erro: any) => console.log('Status do Erro: ', erro.status)
-    )
+    console.log('keyup caracter: ', termodaBusca)
+    this.subjectPesquisa.next(termodaBusca)
       
   }
 

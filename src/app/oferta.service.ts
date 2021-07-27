@@ -1,5 +1,5 @@
 import { Oferta } from "./shared/oferta.model";
-import { HttpClient} from "@angular/common/http";
+import { HttpClient, HttpResponse} from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from 'src/environments/environment';
 import { Observable } from "rxjs";
