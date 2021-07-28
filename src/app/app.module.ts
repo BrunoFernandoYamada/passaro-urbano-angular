@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -12,6 +12,11 @@ import { RestauranteComponent } from './restaurante/restaurante.component';
 import { OfertaComponent } from './oferta/oferta.component';
 import { ComoUsarComponent } from './oferta/como-usar/como-usar.component';
 import { OndeFicaComponent } from './oferta/onde-fica/onde-fica.component';
+import { registerLocaleData } from '@angular/common';
+
+//Foi necessário incluir estas duas linhas para funcionar a conversão da moeda
+import ptBr from '@angular/common/locales/pt';
+registerLocaleData(ptBr)
 
 @NgModule({
   declarations: [
@@ -30,7 +35,10 @@ import { OndeFicaComponent } from './oferta/onde-fica/onde-fica.component';
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [ 
+    //adicionando a convesão da moeda
+    { provide: LOCALE_ID, useValue: 'pt-BR' } 
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
